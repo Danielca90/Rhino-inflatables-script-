@@ -1,0 +1,5 @@
+geomdl>=5.3
+rhino3dm>=8.0
+pillow
+numpy
+pytest
