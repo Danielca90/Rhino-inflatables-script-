@@ -23,12 +23,21 @@ import Rhino
 import Rhino.Geometry as rg
 import scriptcontext as sc
 import rhinoscriptsyntax as rs
+from System.Collections.Generic import List
+
+
+def _net(items, T):
+    """Python list -> .NET List[T] (Rhino 8 Python 3 is picky about bare lists)."""
+    out = List[T]()
+    for i in items:
+        out.Add(i)
+    return out
 
 
 # ---------------------------------------------------------------- curves
 def curve_through_points(points, degree=3, closed=False):
     """INTERPOLATED curve: passes exactly through every point."""
-    pts = rg.Point3dList(points)
+    pts = _net(points, rg.Point3d)
     if closed:
         return rg.Curve.CreateInterpolatedCurve(pts, degree, rg.CurveKnotStyle.ChordPeriodic)
     return rg.Curve.CreateInterpolatedCurve(pts, degree)
@@ -36,7 +45,7 @@ def curve_through_points(points, degree=3, closed=False):
 
 def curve_from_control_points(points, degree=3, closed=False):
     """CONTROL-POINT curve: points form the control polygon (curve doesn't touch them)."""
-    pts = list(points)
+    pts = _net(points, rg.Point3d)
     if closed:
         return rg.NurbsCurve.Create(True, degree, pts)   # periodic
     return rg.Curve.CreateControlPointCurve(pts, degree)
@@ -78,7 +87,7 @@ def surface_from_grid(points, rows, cols, degree=3, mode="control"):
     RhinoCommon wants points ordered u-major: index = i*vCount + j; we map
     rows->u, cols->v.
     """
-    pts = rg.Point3dList(points)
+    pts = _net(points, rg.Point3d)
     du, dv = min(degree, rows - 1), min(degree, cols - 1)
     if mode == "control":
         return rg.NurbsSurface.CreateFromPoints(pts, rows, cols, du, dv)
@@ -94,7 +103,7 @@ def rebuild_surface(srf, u_count=12, v_count=12, degree=3):
 def loft_curves(curves, closed=False, loft_type=rg.LoftType.Normal):
     """Loft through curves -> list of Breps (usually one). Curves should be
     ordered, same direction, similar seam positions."""
-    res = rg.Brep.CreateFromLoft(list(curves), rg.Point3d.Unset, rg.Point3d.Unset,
+    res = rg.Brep.CreateFromLoft(_net(curves, rg.Curve), rg.Point3d.Unset, rg.Point3d.Unset,
                                  loft_type, closed)
     return list(res) if res else []
 
