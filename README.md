@@ -1,10 +1,10 @@
 # Rhino inflatables script
 
-Python tools for **Rhino** (built for Rhino 8, incl. Mac).
+Python tools for **Rhino 7 and 8** (Mac + Windows). Scripts are IronPython 2.7-compatible (no f-strings, numpy or pip).
 
 ## Parametric furniture (live sliders)
 `scripts/furniture_parametric.py` - table, chair, bookshelf. Run it from
-**Tools > Script > Run Python Script...**; a floating panel opens and the model
+**Tools > PythonScript > Run...** (Rhino 7) or **Tools > Script > Run Python Script...** (Rhino 8); a floating panel opens and the model
 **redraws as you move sliders** (leg style, taper, aprons, back tilt, slats,
 shelf count...). Buttons: *Keep piece* (leave it in the model, grouped, and start
 another), *Cut list...* (prints + saves CSV).

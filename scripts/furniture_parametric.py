@@ -1,9 +1,11 @@
-#! python 3
 # -*- coding: utf-8 -*-
-"""Parametric furniture for Rhino (Mac + Windows, Rhino 8, Python 3 script).
+"""Parametric furniture for Rhino 7 and 8 (Mac + Windows).
 
-Run:   Rhino > Tools > Script > Run Python Script...  > pick this file
-       (or open in the Script Editor and press Run)
+Works on Rhino 7 (IronPython 2.7) and Rhino 8 (IronPython or Python 3): no f-strings,
+no numpy, no pip installs.
+
+Run (Rhino 7):  Tools > PythonScript > Run...  > pick this file
+Run (Rhino 8):  Tools > Script > Run Python Script...  (or Script Editor > Run)
 A floating panel appears. Move a slider / type a value and the piece is
 deleted and redrawn automatically. Pieces: table, chair, bookshelf.
 Units: millimetres, Z up, piece centred on X/Y origin, standing on Z=0.
@@ -14,8 +16,11 @@ Design: two layers so the logic can be tested without Rhino
 From the Script Editor you can also skip the UI:
     import furniture_parametric as fp; fp.build_in_rhino("table", width=2000)
 """
+from __future__ import division   # IronPython 2.7: make / true division
+
 import csv
 import math
+import sys
 import traceback
 
 try:
@@ -267,7 +272,11 @@ def cut_list_text(parts):
 
 
 def save_cut_list_csv(parts, path):
-    with open(path, "w", newline="") as f:
+    if sys.version_info[0] >= 3:
+        f = open(path, "w", newline="")
+    else:                                   # IronPython 2.7: csv wants binary mode
+        f = open(path, "wb")
+    with f:
         wr = csv.DictWriter(f, fieldnames=["qty", "part", "size_mm"])
         wr.writeheader()
         wr.writerows(cut_list(parts))

@@ -1,11 +1,11 @@
 ---
 name: rhino-furniture
-description: Parametric furniture (table, chair, bookshelf) for Rhino on Mac/Windows with a live-redraw Eto slider panel and cut list. Use when the user wants to add/modify furniture types, parameters, joinery or the Rhino UI in scripts/furniture_parametric.py.
+description: Parametric furniture (table, chair, bookshelf) for Rhino 7/8 on Mac/Windows with a live-redraw Eto slider panel and cut list. Use when the user wants to add/modify furniture types, parameters, joinery or the Rhino UI in scripts/furniture_parametric.py.
 ---
 
 # Parametric furniture in Rhino
 
-`scripts/furniture_parametric.py` (Rhino 8, `#! python 3`, mm, Z up).
+`scripts/furniture_parametric.py` (Rhino 7 + 8, must stay IronPython 2.7-compatible: no f-strings/annotations/`newline=`, keep `from __future__ import division`; mm, Z up).
 
 ## Architecture - keep it split
 1. **Spec layer (pure Python)**: `PARAMS[kind]` (slider definitions) -> `build_<kind>(values)` -> list of part dicts (`box` / `cyl` / `taper`). Also `bbox`, `cut_list`, `clean` (clamps everything). Fully unit-tested without Rhino (`pytest tests/test_furniture.py`).
